@@ -1,0 +1,107 @@
+﻿
+@model IList<Amazon.SimpleSystemsManagement.Model.Parameter>;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update Parameter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Parmeter Name</label>
+                            <textarea  class="form-control" id="parm-name"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Value</label>
+                            <textarea class="form-control" id="parm-value"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnUpdate" class="btn btn-primary">
+                        <span id="spinnerUpdate" style="display: none;" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Update
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table id="mytable" class="table table-striped table-responsive">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Value</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < @Model.Count; i++)
+            {
+            <tr>
+                <td><a style="color: #0c6ace;" data-toggle="modal" data-target="#exampleModal" data-name="@Model[i].Name" data-value="@Model[i].Value">@Model[i].Name</a></td>
+                <td>@Model[i].Value</td>
+            </tr>
+            }
+
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Value</th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //On parameter name click
+            $('#exampleModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var name = button.data('name') // Extract info from data-* attributes
+                var value = button.data('value') // Extract info from data-* attributes
+                var modal = $(this)
+                modal.find('#parm-name').val(name)
+                modal.find('#parm-value').val(value)
+            });
+
+
+            $("#btnUpdate").click(function () {
+
+                //show loading spinner
+                $('#spinnerUpdate').show();
+
+                //search value
+                var pName = $("#parm-name").val();
+                var pValue = $("#parm-value").val();
+
+                //ajax post to ParametersController GetParameters method
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("UpdateParameter")",
+                    data: { pname: pName, pvalue: pValue },
+                    //dataType: "text",
+                    success: function (data) {
+                        console.log(data);
+                        $('#spinnerUpdate').hide();
+                        $('#exampleModal').modal('hide')
+                    },
+                    error: function (req, status, error) {
+                        console.log(data);
+                    }
+                });
+             });
+
+
+        });
+    </script>
