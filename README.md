@@ -28,6 +28,7 @@ The repository contains an ASP.&#8203;NET Core web application generated using V
 ## Prerequisites
 
 * [.NET Core](https://www.microsoft.com/net/download/windows) >= 3.1
+*  AWS Credential file/profile [(reference)](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
 * Code editor VS Code, or VS 2017/19
 
 ---
